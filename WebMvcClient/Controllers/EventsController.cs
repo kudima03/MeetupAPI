@@ -24,23 +24,27 @@ namespace WebMvcClient.Controllers
             _mapper = mapper;
         }
 
+        [Route("all")]
         public async Task<IActionResult> Index()
         {
             var events = await _eventsHttpClient.GetAllEventsAsync();
             return View(events.AsQueryable().ProjectTo<EventViewModel>(_mapper.ConfigurationProvider));
         }
 
+        [Route("details")]
         public async Task<IActionResult> EventDetails(int eventId)
         {
             return View(await _eventsHttpClient.GetEventAsync(eventId));
         }
 
+        [Route("create")]
         public async Task<IActionResult> CreateEvent(EventDetailedViewModel @event)
         {
             await _eventsHttpClient.CreateEventAsync(_mapper.Map<EventDetailedDTO>(@event));
             return RedirectToAction(nameof(Index));
         }
 
+        [Route("edit")]
         public async Task<IActionResult> UpdateEvent(EventDetailedViewModel @event)
         {
             await _eventsHttpClient.UpdateEventAsync(_mapper.Map<EventDetailedDTO>(@event));

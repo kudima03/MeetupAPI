@@ -22,7 +22,6 @@ namespace WebMvcClient
         {
             services.AddControllersWithViews();
             services.AddCustomAuthentication(Configuration);
-            services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
             services.AddHttpClientServices(Configuration);
             services.AddAutoMapper(typeof(EventDTOMapperConfiguration));
             services.AddMvc(options => options.EnableEndpointRouting = false);
