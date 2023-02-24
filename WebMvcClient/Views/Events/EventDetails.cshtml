@@ -1,0 +1,13 @@
+﻿@model EventDetailedViewModel
+
+<h4>@Model.Name</h4>
+<h4>Описание мероприятия: @Model.Description</h4>
+<h4>План мероприятия:</h4>
+@foreach(var item in Model.Plan!.Split('\n'))
+{
+    <h4>@item</h4>
+}
+<h4>Организатор: @Model.Organizer</h4>
+<h4>Спикер: @Model.Speaker</h4>
+<h4>Место проведения: @Model.Location</h4>
+<h4>Время проведения: @Model.DateTime</h4>

@@ -1,0 +1,8 @@
+﻿@using FluentValidation.Results;
+@model IEnumerable<ValidationFailure>
+
+<h2>Обнаружены ошибки ввода:</h2>
+@foreach(var item in Model) {
+    <h4>@item.ErrorMessage</h4>
+    <br/>
+}

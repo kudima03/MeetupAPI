@@ -5,6 +5,9 @@ using WebMvcClient.Services;
 using WebMvcClient.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using WebMvcClient.AutomapperProfiles;
+using FluentValidation;
+using WebMvcClient.ViewModels;
+using WebMvcClient.ModelValidators;
 
 namespace WebMvcClient
 {
@@ -22,9 +25,9 @@ namespace WebMvcClient
         {
             services.AddControllersWithViews();
             services.AddCustomAuthentication(Configuration);
-            services.AddTransient<IIdentityParser<ApplicationUser>, IdentityParser>();
             services.AddHttpClientServices(Configuration);
             services.AddAutoMapper(typeof(EventDTOMapperConfiguration));
+            services.AddTransient<IValidator<EventDetailedViewModel>, EventDetailedViewModelValidator>();
             services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
@@ -51,10 +54,6 @@ namespace WebMvcClient
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                app.UseEndpoints(endpoints =>
-                {
-                    endpoints.MapControllers();
-                });
             });
         }
     }

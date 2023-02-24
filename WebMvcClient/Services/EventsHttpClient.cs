@@ -17,6 +17,12 @@ namespace WebMvcClient.Services
             _meetupApiUrl = configuration.GetValue<string>("MeetupApiUrl");
         }
 
+        /// <summary>
+        /// Deletes event on apropriate API, specified in config as MeetupApiUrl.<br/>
+        /// </summary>
+        /// <param name="eventId"></param>
+        /// <returns></returns>
+        /// <exception cref="HttpRequestException"></exception>
         public async Task DeleteEventAsync(int eventId)
         {
             var request = new HttpRequestMessage()
@@ -28,6 +34,14 @@ namespace WebMvcClient.Services
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Returns all events from apropriate API, specified in config as MeetupApiUrl.<br/>
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="JsonException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="HttpRequestException"></exception>
         public async Task<List<EventDTO>> GetAllEventsAsync()
         {
             var request = new HttpRequestMessage()
@@ -41,6 +55,14 @@ namespace WebMvcClient.Services
             return JsonSerializer.Deserialize<List<EventDTO>>(responseStr, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<EventDTO>();
         }
 
+        /// <summary>
+        /// Returns event with <paramref name="eventId"/> from apropriate API, specified in config as MeetupApiUrl.<br/>
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="JsonException"></exception>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="HttpRequestException"></exception>
         public async Task<EventDetailedDTO> GetEventAsync(int eventId)
         {
             var request = new HttpRequestMessage()
@@ -54,6 +76,12 @@ namespace WebMvcClient.Services
             return JsonSerializer.Deserialize<EventDetailedDTO>(a, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new EventDetailedDTO();
         }
 
+        /// <summary>
+        /// Creates event on apropriate API, specified in config as MeetupApiUrl.<br/>
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="HttpRequestException"></exception>
         public async Task CreateEventAsync(EventDetailedDTO @event)
         {
             var request = new HttpRequestMessage()
@@ -66,6 +94,12 @@ namespace WebMvcClient.Services
             response.EnsureSuccessStatusCode();
         }
 
+        /// <summary>
+        /// Updates event on apropriate API, specified in config as MeetupApiUrl.<br/>
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        /// <exception cref="HttpRequestException"></exception>
         public async Task UpdateEventAsync(EventDetailedDTO @event)
         {
             var request = new HttpRequestMessage()

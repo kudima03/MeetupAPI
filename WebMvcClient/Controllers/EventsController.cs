@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,32 +19,75 @@ namespace WebMvcClient.Controllers
 
         private readonly IMapper _mapper;
 
-        public EventsController(IEventsHttpClient eventsHttpClient, IMapper mapper)
+        private readonly IValidator<EventDetailedViewModel> _validator;
+
+        public EventsController(IEventsHttpClient eventsHttpClient, IMapper mapper, IValidator<EventDetailedViewModel> validator)
         {
             _eventsHttpClient = eventsHttpClient;
             _mapper = mapper;
+            _validator = validator;
         }
 
+        [Route("all")]
         public async Task<IActionResult> Index()
         {
             var events = await _eventsHttpClient.GetAllEventsAsync();
-            return View(events.AsQueryable().ProjectTo<EventViewModel>(_mapper.ConfigurationProvider));
+            return View(events.AsQueryable().ProjectTo<EventViewModel>(_mapper.ConfigurationProvider).AsEnumerable());
         }
 
+        [Route("details")]
         public async Task<IActionResult> EventDetails(int eventId)
         {
-            return View(await _eventsHttpClient.GetEventAsync(eventId));
+            return View(_mapper.Map<EventDetailedViewModel>(await _eventsHttpClient.GetEventAsync(eventId)));
         }
 
-        public async Task<IActionResult> CreateEvent(EventDetailedViewModel @event)
+        [HttpGet]
+        [Route("create")]
+        public IActionResult CreateEvent()
         {
+            return View("CreateOrUpdateEvent", new EventDetailedViewModel());
+        }
+
+        [HttpPost]
+        [Route("create")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateEvent([FromForm] EventDetailedViewModel @event)
+        {
+            var validationResult = _validator.Validate(@event);
+            if (!validationResult.IsValid)
+            {
+                return View("ValidationErrors", validationResult.Errors);
+            }
             await _eventsHttpClient.CreateEventAsync(_mapper.Map<EventDetailedDTO>(@event));
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> UpdateEvent(EventDetailedViewModel @event)
+        [HttpGet]
+        [Route("edit")]
+        public async Task<IActionResult> UpdateEvent(int eventId)
         {
+            return View("CreateOrUpdateEvent", _mapper.Map<EventDetailedViewModel>(await _eventsHttpClient.GetEventAsync(eventId)));
+        }
+
+        [HttpPost]
+        [Route("edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateEvent([FromForm] EventDetailedViewModel @event)
+        {
+            var validationResult = _validator.Validate(@event);
+            if (!validationResult.IsValid)
+            {
+                return View("ValidationErrors", validationResult.Errors);
+            }
             await _eventsHttpClient.UpdateEventAsync(_mapper.Map<EventDetailedDTO>(@event));
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        [Route("delete")]
+        public async Task<IActionResult> DeleteEvent(int eventId)
+        {
+            await _eventsHttpClient.DeleteEventAsync(eventId);
             return RedirectToAction(nameof(Index));
         }
     }

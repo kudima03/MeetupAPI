@@ -1,0 +1,51 @@
+﻿@model EventDetailedViewModel
+
+@{
+    string action = Model.Id == 0 ? "CreateEvent" : "UpdateEvent";
+}
+<body>
+  
+    <form asp-controller="Events" asp-action=@action method="post">
+
+        <div class="form-group" hidden="hidden">
+            <input type="number" asp-for="Id" value="@Model.Id" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Name">Название события:</label>
+            <input type="text" asp-for="Name" size="50" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description">Описание:</label>
+            <input type="text" size="60" asp-for="Description" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Plan">План:</label>
+            <input type="text" asp-for="Plan" size="50" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Organizer">Организатор:</label>
+            <input type="text" asp-for="Organizer" size="50" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Speaker">Спикер:</label>
+            <input type="text" asp-for="Speaker" size="50" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Location">Место:</label>
+            <input type="text" asp-for="Location" size="50" required class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="DateTime">Время:</label>
+            <input type="datetime-local" value=@DateTime.Now asp-for="DateTime" required class="form-control" />
+        </div>
+
+        <input type="submit" name="submit">
+    </form>
+</body>

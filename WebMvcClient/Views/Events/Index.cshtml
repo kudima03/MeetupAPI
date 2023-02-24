@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<EventViewModel>
 
-@foreach(var item in Model){
-    <h1>@item.Name</h1>
-    <h1>@item.Id</h1>
-    <h1>@item.Name</h1>
-    <h1>@item.Organizer </h1>
-    <br/>
+<a asp-controller="Events" asp-action="CreateEvent">Создать событие</a>
+
+@foreach (var item in Model)
+{
+    <partial name="EventView" for="@item" />
+    <br />
 }

@@ -3,7 +3,7 @@
     "WebMvcClient": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:7001/events",
+      "launchUrl": "https://localhost:7001/events/all",
       "applicationUrl": "https://localhost:7001;http://localhost:7000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
