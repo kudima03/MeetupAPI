@@ -2,5 +2,7 @@
 1.Clone and open this repository in Visual Studio.<br/>
 2.Create empty database in your MSSQL Server.<br/>
 3.Replace ConnectionString in IdentityServer->appsettings.json, MeetupAPI->appsettings.json with your connection string.<br/>
-4.Ensure that launch order looks like:<br/>![image](https://user-images.githubusercontent.com/93078951/221369252-f9c2e784-7899-45cd-828a-22bf4287059c.png)<br/>
-5.Launch project.
+4.Run IdentityServer and MeetupAPI and wait untill migrations are completed.<br/>
+5.Run WebMvcClient, you'll be redirected to authorization form.<br/>
+6.You can authorize via demo credentials: email:demouser@gmail.com, password:demopassword <br/>
+or you can register new account.
