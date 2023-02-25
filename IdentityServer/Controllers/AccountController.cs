@@ -3,7 +3,6 @@ using IdentityServer.Services;
 using IdentityServer.ViewModels;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,8 +14,6 @@ namespace IdentityServer.Controllers
     {
         private readonly ILoginService<ApplicationUser> _loginService;
         private readonly IIdentityServerInteractionService _interaction;
-        private readonly IClientStore _clientStore;
-        private readonly ILogger<AccountController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _configuration;
 
@@ -24,15 +21,11 @@ namespace IdentityServer.Controllers
         public AccountController(
             ILoginService<ApplicationUser> loginService,
             IIdentityServerInteractionService interaction,
-            IClientStore clientStore,
-            ILogger<AccountController> logger,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration)
         {
             _loginService = loginService;
             _interaction = interaction;
-            _clientStore = clientStore;
-            _logger = logger;
             _userManager = userManager;
             _configuration = configuration;
         }
@@ -125,7 +118,7 @@ namespace IdentityServer.Controllers
                     PhoneNumber = model.User.PhoneNumber,
                 };
                 var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Errors.Count() > 0)
+                if (result.Errors.Any())
                 {
                     AddErrors(result);
                     return View(model);
@@ -138,7 +131,7 @@ namespace IdentityServer.Controllers
                     return Redirect(returnUrl);
                 else
                     if (ModelState.IsValid)
-                    return RedirectToAction("login", "account", new { returnUrl = returnUrl });
+                    return RedirectToAction("login", "account", returnUrl);
                 else
                     return View(model);
             }

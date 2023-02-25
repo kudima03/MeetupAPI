@@ -22,6 +22,8 @@ namespace WebMvcClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
             services.AddControllersWithViews();
             services.AddCustomAuthentication(Configuration);
             services.AddHttpClientServices(Configuration);
@@ -34,6 +36,8 @@ namespace WebMvcClient
         {
             if (env.IsDevelopment())
             {
+                app.UseSwagger();
+                app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
             }
 

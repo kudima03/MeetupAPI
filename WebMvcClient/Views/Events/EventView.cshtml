@@ -6,6 +6,7 @@
 <div class="event-view">
     <hr />
     <a asp-controller="Events" asp-action="EventDetails" asp-route-eventId="@Model.Id">@Model.Name</a>
+    <br/>
     <a asp-controller="Events" asp-action="DeleteEvent" asp-route-eventId="@Model.Id">Удалить</a>
     <a asp-controller="Events" asp-action="UpdateEvent" asp-route-eventId="@Model.Id">Редактировать</a>
     <br />

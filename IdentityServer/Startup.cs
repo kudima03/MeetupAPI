@@ -19,6 +19,9 @@ namespace IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
             services.AddControllersWithViews();
 
             services.AddDbContext<AuthorizationDbContext>(options =>
@@ -72,6 +75,8 @@ namespace IdentityServer
         {
             if (env.IsDevelopment())
             {
+                app.UseSwagger();
+                app.UseSwaggerUI();
                 app.UseDeveloperExceptionPage();
             }
 

@@ -28,6 +28,7 @@ namespace WebMvcClient.Controllers
             _validator = validator;
         }
 
+        [HttpGet]
         [Route("all")]
         public async Task<IActionResult> Index()
         {
@@ -35,6 +36,7 @@ namespace WebMvcClient.Controllers
             return View(events.AsQueryable().ProjectTo<EventViewModel>(_mapper.ConfigurationProvider).AsEnumerable());
         }
 
+        [HttpGet]
         [Route("details")]
         public async Task<IActionResult> EventDetails(int eventId)
         {
@@ -51,7 +53,7 @@ namespace WebMvcClient.Controllers
         [HttpPost]
         [Route("create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEvent([FromForm] EventDetailedViewModel @event)
+        public async Task<IActionResult> CreateEventz([FromForm] EventDetailedViewModel @event)
         {
             var validationResult = _validator.Validate(@event);
             if (!validationResult.IsValid)
