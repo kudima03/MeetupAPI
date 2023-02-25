@@ -9,8 +9,8 @@ namespace IdentityServer.Certificate
         {
             var assembly = typeof(Certificate).GetTypeInfo().Assembly;
             var names = assembly.GetManifestResourceNames();
-            using var stream = assembly.GetManifestResourceStream("IdentityServer.Certificate.idsrv3test.pfx");
-            return new X509Certificate2(ReadStream(stream), "idsrv3test");
+            using var stream = assembly.GetManifestResourceStream("IdentityServer.Certificate.Certificate.pfx");
+            return new X509Certificate2(ReadStream(stream), "password");
         }
 
         private static byte[] ReadStream(Stream input)

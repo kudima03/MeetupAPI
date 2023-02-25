@@ -1,5 +1,4 @@
-﻿using WebMvcClient.Models;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using WebMvcClient.Services;
 using WebMvcClient.Infrastructure;
@@ -28,7 +27,6 @@ namespace WebMvcClient
             services.AddHttpClientServices(Configuration);
             services.AddAutoMapper(typeof(EventDTOMapperConfiguration));
             services.AddTransient<IValidator<EventDetailedViewModel>, EventDetailedViewModelValidator>();
-            services.AddMvc(options => options.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,8 +40,6 @@ namespace WebMvcClient
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseMvc();
 
             app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 
@@ -63,7 +59,7 @@ namespace WebMvcClient
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             var identityUrl = configuration.GetValue<string>("IdentityUrl");
-            var sessionCookieLifetime = configuration.GetValue("SessionCookieLifetimeMinutes", 60);
+            var sessionCookieLifetime = configuration.GetValue("SessionCookieLifetimeMinutes", 120);
 
             services.AddAuthentication(options =>
             {

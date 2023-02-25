@@ -41,8 +41,8 @@ namespace MeetupAPI.Controllers
         [HttpGet]
         [Route("detailed")]
         [ProducesResponseType(typeof(Event), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(Event), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(Event), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<EventDetailedDTO>> GetById([FromQuery] int eventId)
         {
             if (eventId <= 0)
@@ -66,7 +66,7 @@ namespace MeetupAPI.Controllers
         [Route("add")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post([FromBody] EventDetailedDTO @event)
         {
             var validationResult = _eventValidator.Validate(@event);
@@ -76,7 +76,6 @@ namespace MeetupAPI.Controllers
             }
 
             @event.Id = 0;
-
             await _eventContext.Events.AddAsync(_mapper.Map<Event>(@event));
             await _eventContext.SaveChangesAsync();
             return Ok();
@@ -86,8 +85,8 @@ namespace MeetupAPI.Controllers
         [Route("edit")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Put([FromBody] EventDetailedDTO @event)
         {
             var validationResult = _eventValidator.Validate(@event);
@@ -109,8 +108,8 @@ namespace MeetupAPI.Controllers
         [HttpDelete]
         [Route("delete")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete([FromQuery] int eventId)
         {
             if (eventId <= 0)

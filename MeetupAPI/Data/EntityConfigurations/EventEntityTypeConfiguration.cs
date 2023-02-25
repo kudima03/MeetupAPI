@@ -1,6 +1,5 @@
 ﻿using MeetupAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace MeetupAPI.Data.EntityConfigurations

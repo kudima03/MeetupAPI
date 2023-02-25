@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.Extensions
 {
@@ -14,13 +13,13 @@ namespace IdentityServer.Extensions
 
             try
             {
-                logger.LogInformation("Migrating database associated with context {DbContextName}", typeof(TContext).Name);
+                logger.LogInformation($"Migrating database associated with context {typeof(TContext).Name}");
                 InvokeSeeder(seeder, context, services);
-                logger.LogInformation("Migrated database associated with context {DbContextName}", typeof(TContext).Name);
+                logger.LogInformation($"Migrated database associated with context {typeof(TContext).Name}");
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);
+                logger.LogError(ex, $"An error occurred while migrating the databases on context {typeof(TContext).Name}");
             }
             return webHost;
         }

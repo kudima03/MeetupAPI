@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Certificate\Certificate.pfx" />
     <None Remove="Certificate\idsrv3test.pfx" />
     <None Remove="Controllers\AccountController.cs~RF198da61.TMP" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Certificate\idsrv3test.pfx" />
+    <EmbeddedResource Include="Certificate\Certificate.pfx" />
   </ItemGroup>
 
   <ItemGroup>
