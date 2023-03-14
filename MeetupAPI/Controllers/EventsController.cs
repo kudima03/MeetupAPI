@@ -7,12 +7,14 @@ using MeetupAPI.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 using System.Net.Mime;
 
 namespace MeetupAPI.Controllers
 {
     [Authorize]
     [ApiController]
+    //events/
     [Route("[controller]")]
     public class EventsController : ControllerBase
     {
@@ -30,7 +32,6 @@ namespace MeetupAPI.Controllers
         }
 
         [HttpGet]
-        [Route("all")]
         [ProducesResponseType(typeof(IEnumerable<EventDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<EventDTO>>> GetAllEvents()
         {
@@ -38,12 +39,11 @@ namespace MeetupAPI.Controllers
             return Ok(await query.ToListAsync());
         }
 
-        [HttpGet]
-        [Route("detailed")]
+        [HttpGet("{eventId:int}")]
         [ProducesResponseType(typeof(Event), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Event), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<EventDetailedDTO>> GetById([FromQuery] int eventId)
+        public async Task<ActionResult<EventDetailedDTO>> GetById(int eventId)
         {
             if (eventId <= 0)
             {
@@ -56,14 +56,13 @@ namespace MeetupAPI.Controllers
 
             if (entity == null)
             {
-                return NotFound(new EventDetailedDTO() { Id = eventId });
+                return NotFound($"Event with id:{eventId} not found."/*new EventDetailedDTO() { Id = eventId }*/);
             }
 
             return Ok(entity);
         }
 
         [HttpPost]
-        [Route("add")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -82,7 +81,6 @@ namespace MeetupAPI.Controllers
         }
 
         [HttpPut]
-        [Route("edit")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -97,7 +95,9 @@ namespace MeetupAPI.Controllers
 
             if (!await _eventContext.Events.AnyAsync(x => x.Id == @event.Id))
             {
-                return NotFound("Event to edit not found.");
+                @event.Id = 0;
+                await _eventContext.AddAsync(_mapper.Map<Event>(@event));
+                return Ok();
             }
 
             _eventContext.Events.Update(_mapper.Map<Event>(@event));
@@ -105,12 +105,11 @@ namespace MeetupAPI.Controllers
             return Ok();
         }
 
-        [HttpDelete]
-        [Route("delete")]
+        [HttpDelete("{eventId:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromQuery] int eventId)
+        public async Task<IActionResult> Delete(int eventId)
         {
             if (eventId <= 0)
             {

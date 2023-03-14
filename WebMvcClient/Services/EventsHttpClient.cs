@@ -51,8 +51,8 @@ namespace WebMvcClient.Services
             };
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            var responseStr = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<List<EventDTO>>(responseStr, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<EventDTO>();
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<EventDTO>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<EventDTO>();
         }
 
         /// <summary>
@@ -72,8 +72,8 @@ namespace WebMvcClient.Services
             };
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
-            var a = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<EventDetailedDTO>(a, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new EventDetailedDTO();
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<EventDetailedDTO>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new EventDetailedDTO();
         }
 
         /// <summary>
