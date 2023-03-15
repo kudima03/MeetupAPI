@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace MeetupAPI.Data.EntityConfigurations
+namespace MeetupAPI.Data.DbDataSource.EntityConfigurations
 {
     public class EventEntityTypeConfiguration
         : IEntityTypeConfiguration<Event>

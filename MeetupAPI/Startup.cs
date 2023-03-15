@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
 using MeetupAPI;
-using MeetupAPI.Data;
+using MeetupAPI.Data.DbDataSource;
+using MeetupAPI.Data.Interfaces;
+using MeetupAPI.Models;
 using MeetupAPI.Models.AutomapperProfiles;
 using MeetupAPI.Models.DTOs;
 using MeetupAPI.ModelValidators;
@@ -30,6 +32,7 @@ namespace MeetupAPI
             services.AddCustomDbContext(Configuration);
             services.AddHttpContextAccessor();
             services.AddTransient<IValidator<EventDetailedDTO>, EventValidator>();
+            services.AddTransient<IAsyncRepository<Event>, EventDbRepository>();
             services.AddAutoMapper(typeof(EventMapperConfiguration));
         }
 

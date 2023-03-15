@@ -1,7 +1,7 @@
 ﻿using MeetupAPI.Models;
 using System.Text.Json;
 
-namespace MeetupAPI.Data
+namespace MeetupAPI.Data.DbDataSource
 {
     public class EventContextSeed
     {

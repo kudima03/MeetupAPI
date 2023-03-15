@@ -53,7 +53,7 @@ namespace WebMvcClient.Controllers
         [HttpPost]
         [Route("create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEventz([FromForm] EventDetailedViewModel @event)
+        public async Task<IActionResult> CreateEvent([FromForm] EventDetailedViewModel @event)
         {
             var validationResult = _validator.Validate(@event);
             if (!validationResult.IsValid)

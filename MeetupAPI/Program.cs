@@ -1,5 +1,5 @@
 using MeetupAPI;
-using MeetupAPI.Data;
+using MeetupAPI.Data.DbDataSource;
 using MeetupAPI.Extensions;
 using MeetupAPI.Models;
 using Microsoft.AspNetCore;

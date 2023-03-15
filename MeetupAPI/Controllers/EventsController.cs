@@ -1,30 +1,26 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using FluentValidation;
-using MeetupAPI.Data;
+using MeetupAPI.Data.Interfaces;
 using MeetupAPI.Models;
 using MeetupAPI.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
 using System.Net.Mime;
 
 namespace MeetupAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    //events/
     [Route("[controller]")]
     public class EventsController : ControllerBase
     {
-        private readonly EventContext _eventContext;
+        private readonly IAsyncRepository<Event> _eventContext;
 
         private readonly IValidator<EventDetailedDTO> _eventValidator;
 
         private readonly IMapper _mapper;
 
-        public EventsController(EventContext eventContext, IValidator<EventDetailedDTO> eventValidator, IMapper mapper)
+        public EventsController(IAsyncRepository<Event> eventContext, IValidator<EventDetailedDTO> eventValidator, IMapper mapper)
         {
             _eventContext = eventContext;
             _eventValidator = eventValidator;
@@ -35,8 +31,9 @@ namespace MeetupAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<EventDTO>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<EventDTO>>> GetAllEvents()
         {
-            var query = _eventContext.Events.AsNoTracking().ProjectTo<EventDTO>(_mapper.ConfigurationProvider);
-            return Ok(await query.ToListAsync());
+            var events = await _eventContext.GetAllAsync();
+            var eventsDTO = from item in events select _mapper.Map<EventDTO>(item);
+            return Ok(eventsDTO);
         }
 
         [HttpGet("{eventId:int}")]
@@ -50,16 +47,14 @@ namespace MeetupAPI.Controllers
                 return BadRequest("Id cannot be less than zero.");
             }
 
-            var entity = await _eventContext.Events.AsNoTracking()
-                .ProjectTo<EventDetailedDTO>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync(x => x.Id == eventId);
+            var @event = await _eventContext.GetByIdAsync(eventId);
 
-            if (entity == null)
+            if (@event == null)
             {
-                return NotFound($"Event with id:{eventId} not found."/*new EventDetailedDTO() { Id = eventId }*/);
+                return NotFound($"Event with id:{eventId} not found.");
             }
 
-            return Ok(entity);
+            return Ok(_mapper.Map<EventDetailedDTO>(@event));
         }
 
         [HttpPost]
@@ -75,8 +70,8 @@ namespace MeetupAPI.Controllers
             }
 
             @event.Id = 0;
-            await _eventContext.Events.AddAsync(_mapper.Map<Event>(@event));
-            await _eventContext.SaveChangesAsync();
+            await _eventContext.CreateAsync(_mapper.Map<Event>(@event));
+            await _eventContext.SaveAsync();
             return Ok();
         }
 
@@ -93,15 +88,16 @@ namespace MeetupAPI.Controllers
                 return BadRequest(validationResult.ToString());
             }
 
-            if (!await _eventContext.Events.AnyAsync(x => x.Id == @event.Id))
+            var entity = _eventContext.GetById(@event.Id);
+
+            if (entity == null)
             {
                 @event.Id = 0;
-                await _eventContext.AddAsync(_mapper.Map<Event>(@event));
+                await _eventContext.CreateAsync(_mapper.Map<Event>(@event));
                 return Ok();
             }
-
-            _eventContext.Events.Update(_mapper.Map<Event>(@event));
-            await _eventContext.SaveChangesAsync();
+            await _eventContext.UpdateAsync(_mapper.Map<Event>(@event));
+            await _eventContext.SaveAsync();
             return Ok();
         }
 
@@ -116,14 +112,14 @@ namespace MeetupAPI.Controllers
                 return BadRequest("Id cannot be less than zero.");
             }
 
-            var entityToDelete = await _eventContext.Events.FirstOrDefaultAsync(x => x.Id == eventId);
+            var entityToDelete = await _eventContext.GetByIdAsync(eventId);
             if (entityToDelete == null)
             {
                 return NotFound("Event not found.");
             }
 
-            _eventContext.Events.Remove(entityToDelete);
-            await _eventContext.SaveChangesAsync();
+            await _eventContext.DeleteAsync(entityToDelete);
+            await _eventContext.SaveAsync();
             return Ok();
         }
     }

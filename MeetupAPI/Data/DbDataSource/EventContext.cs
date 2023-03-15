@@ -1,8 +1,8 @@
-﻿using MeetupAPI.Data.EntityConfigurations;
+﻿using MeetupAPI.Data.DbDataSource.EntityConfigurations;
 using MeetupAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace MeetupAPI.Data
+namespace MeetupAPI.Data.DbDataSource
 {
     public class EventContext : DbContext
     {
