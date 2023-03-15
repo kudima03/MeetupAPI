@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MeetupAPI.Data.EventContextMigrations
+namespace MeetupAPI.Data.DbDataSource.EventContextMigrations
 {
     [DbContext(typeof(EventContext))]
     partial class EventContextModelSnapshot : ModelSnapshot
@@ -24,11 +24,11 @@ namespace MeetupAPI.Data.EventContextMigrations
 
             modelBuilder.Entity("MeetupAPI.Models.Event", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");

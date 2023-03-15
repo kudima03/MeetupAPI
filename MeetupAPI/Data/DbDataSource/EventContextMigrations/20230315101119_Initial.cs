@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MeetupAPI.Data.EventContextMigrations
+namespace MeetupAPI.Data.DbDataSource.EventContextMigrations
 {
     public partial class Initial : Migration
     {
@@ -13,7 +13,7 @@ namespace MeetupAPI.Data.EventContextMigrations
                 name: "Event",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
